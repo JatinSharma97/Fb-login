@@ -1,4 +1,4 @@
-package com.example.driveusers.Fragments;
+
 
 import android.content.Intent;
 import android.net.Uri;
@@ -95,19 +95,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Goo
     }
 
     private void setup() {
-        signup.setOnClickListener(this);
-        btn_login.setOnClickListener(this);
-        tv_forget_pass.setOnClickListener(this);
+   
         google_login.setOnClickListener(this);
         img_fb.setOnClickListener(this);
     }
 
     private void findids() {
-        et_password = view.findViewById(R.id.et_password);
-        et_email = view.findViewById(R.id.et_email);
-        signup = view.findViewById(R.id.signup);
-        btn_login = view.findViewById(R.id.btn_login);
-        tv_forget_pass = view.findViewById(R.id.tv_forget_pass);
+ 
         google_login = view.findViewById(R.id.google_login);
         img_fb = view.findViewById(R.id.img_fb);
     }
@@ -115,9 +109,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Goo
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.signup:
-                Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_registrationFragment);
-                break;
+       
 
             case R.id.google_login:
                 signIn();
@@ -126,27 +118,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Goo
             case R.id.img_fb:
                 FacebookLogin facebookLogin = new FacebookLogin(getActivity(), Constants.LOGIN_VIDEO, getActivity().getApplication());
                 facebookLogin.FBLogin();
-                break;
-
-            case R.id.tv_forget_pass:
-                Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_forgetPassFragment);
-                break;
-            case R.id.btn_login:
-                userEmail = et_email.getText().toString();
-                userPassword = et_password.getText().toString();
-                if (userEmail.isEmpty()) {
-                    et_email.setError("please enter your email");
-                    et_email.requestFocus();
-                } else if (!userEmail.matches(emailpattern)) {
-                    et_email.setError("please enter valid email");
-                    et_email.requestFocus();
-                } else if (userPassword.isEmpty()) {
-                    et_password.setError("please enter your number");
-                    et_password.requestFocus();
-                } else {
-                    LoginApi();
-                }
-
                 break;
         }
     }
@@ -198,23 +169,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Goo
         });
     }
 
-    private void LoginApi() {
-        myMVVM.UserLogin(getActivity(), userEmail, userPassword, "123456789", "android", "", "").observe(getViewLifecycleOwner(), new Observer<RegisterPojo>() {
-            @Override
-            public void onChanged(RegisterPojo registerPojo) {
-                if (registerPojo.getSuccess().equalsIgnoreCase("1")) {
-                    App.getSharedpref().saveString(Constants.USER_Login_STATUS, "1");
-                    App.getSharedpref().saveModel(Constants.User_Register, registerPojo);
-                    Intent intent = new Intent(getActivity(), HomeActivity.class);
-                    startActivity(intent);
-                    Toast.makeText(getActivity(), "Login Successfully", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getActivity(), "Please Check your Details", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
